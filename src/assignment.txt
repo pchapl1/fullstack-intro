@@ -1,0 +1,39 @@
+Implement Blog List
+Approach: Before implementing the useEffect and fetch functionality, we will use sampleBlogs to scaffold out the app UI first. For simplicity, we will create all the components in the ./src/App.js file.
+[x] Create a new state variable in <App/> called blogs, initialized to sampleBlogs (or a copy of sampleBlogs using the spread operator). [1]
+[x] Create two new components <BlogList/> and <BlogListCard/>. Both should have simple enclosing div's in the JSX return statement for now. [2]
+[x] Add an instance of <BlogList/> to the JSX of <App/>.
+[x] Pass the blogs state variable in as a prop to <BlogList/> in the JSX of <App/>. [3]
+[x] In the JSX of <BlogList/>, add a map function that maps through the blogs array coming from the props and return a <BlogListCard/> in the map for every blog in the array of blogs. Additionally in the map, pass in the blog parameter as a prop to the <BlogListCard/>. [4]
+In <BlogListCard/>,
+[x] Display the title of the blog coming in through props in an h2 tag.
+[x] Display the author of the blog coming in through props in a p tag.
+[x] Display the text of the blog coming in through props in a p tag.
+If you implemented the above correctly, you should be able to visit localhost:3000 and see the sample blogs rendered to the page as a list of <BlogListCard/>'s.
+
+
+
+High Level
+3: Implement Fetch and useEffect
+
+Approach: Now that we have the sampleBlogs displaying to the page, we are going to fetch the actual blog list from the mock api endpoint.
+[x] Create a new file ./.env
+Note: This file does NOT go into the ./src folder. It should be in the root folder on the same level as package.json.
+[x] In ./.env, add the following environment variable
+REACT_APP_URL_ENDPOINT=https://62a8b06d943591102ba80fee.mockapi.io
+Important: Specifically for react applications, all environment variables MUST be prefixed with REACT_APP.
+[x] In the global scope above <App/>, create a new variable called urlEndpoint and set it equal to the REACT_APP_URL_ENDPOINT environment variable.
+Everytime .env file is added/updated in the application, you will have to restart your react terminal process.
+[x] In the body of <App/>, add an invocation of the useEffect hook with an empty function passed in as the first argument and an empty array passed in as the second.
+Note:
+The empty function passed into useEffect is known as an effect function.
+The empty array is called the dependency array and is necessary to prevent repeated calls of the effect function every time <App/> renders. If we did not have the empty array here (try taking it out once you have the app up and running to see what happens), the effect function would trigger every time <App/> rerenders which will happen every time setBlogs is called. This triggering an endless loop of rerendering.
+[x] Inside the effect function you just created, write a new async function called fetchBlogs. Fetch blogs should:
+[x] Invoke the fetch api with the url {urlEndpoint}/blogs and assign that to a variable called result.
+Note: This awaited invocation of fetch is going to make an HTTP request to the url string passed into the fetch() function. The variable result will be an object containing the HTTP result of the request; which includes the response payload as well as information of the response itself.
+[x] Invoke the .json() method on result and assign that to a variable called blogs.
+Note: The result.json() method retrieves the actual data/payload of the response and assigns it to the variable result.
+[x] Call the setBlogs setter function on blogs.
+Suggestion: console.log() result and blogs to see the result of the fetch() call.
+[x] Inside the effect function and below the fetchBlogs function definition, call fetchBlogs()
+If you implemented the above correctly, you should see the entire list of 50 blog posts fetched from mockapi rendered to the page.
