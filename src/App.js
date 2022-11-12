@@ -68,15 +68,56 @@ const BlogListCard = (props) => {
   )
 }
 
+const OptionBar = (props) => {
+  const {generateUrlParams} = props
+
+  const [limit, setLimit] = useState(10)
+  const [page, setPage] = useState(1)
+  const [sortBy, setSortBy] = useState("")
+  const [order, setOrder] = useState("")
+
+  useEffect(()=> {
+    generateUrlParams(limit, page, sortBy, order)
+  }, [generateUrlParams])
+
+  return (
+    <div className="option-bar">
+      <label htmlFor="limit">Limit: </label>
+      <input type="number" name="limit" id="" />
+      <label htmlFor="page">Page: </label>
+      <input type="number" name="page" id="" />
+      <label htmlFor="sortBy">Sort By:</label>
+      <select name="sortBy" id="">
+        <option value=""></option>
+        <option value="id">ID</option>
+        <option value="title">Title</option>
+        <option value="createdAt">Created At</option>
+      </select>
+      <label htmlFor="Order">Order</label>
+      <select name="order" id="">
+        <option value=""></option>
+        <option value="asc">asc</option>
+        <option value="des">des</option>
+      </select>
+
+    </div>
+  )
+}
+
 const urlEndpoint = process.env.REACT_APP_URL_ENDPOINT;
 
 const App = () => {
 
+  const [urlParamString, setUrlParamString] = useState("")
   const [blogs, setBlogs] = useState(sampleBlogs)
+
+  const generateUrlParams = (limit, page, sortBy, order) => {
+    setUrlParamString(`?limit=${limit}&page=${page}&sortBy=${sortBy}&order=${order}`)
+  }
 
   useEffect(()=>{
     const fetchBlogs = async ()=> {
-      const result = await fetch(`${urlEndpoint}/blogs`)
+      const result = await fetch(`${urlEndpoint}/blogs/${urlParamString}`)
 
       const blogs = await result.json()
 
@@ -87,9 +128,14 @@ const App = () => {
     fetchBlogs()
   }, [])
 
+  useEffect(()=> {
+    generateUrlParams(limit, page, sortBy, order)
+  }, [generateUrlParams])
+
 	return (
 		<div className="App-header">
       <h1>Blogs</h1>
+      <OptionBar generateUrlParams={generateUrlParams}/>
       <BlogList blogs={blogs} />
 		</div>
 	);
